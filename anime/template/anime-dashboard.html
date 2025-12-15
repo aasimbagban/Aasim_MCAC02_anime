@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block anime_dashboard %} active {% endblock anime_dashboard %}
+{% block body %}
+
+
+<body>
+
+
+    <header class="p-3 bg-dark text-white text-center">
+        <h2>Anime Dashboard</h2>
+    </header>
+
+    <div class="container my-5">
+
+
+        <div class="card shadow-lg p-4 mb-5">
+            <h3 class="mb-4">Add New Anime</h3>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Anime Title</label>
+                    <input type="text" name="title" class="form-control" placeholder="Enter anime name..." required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Write anime description..."
+                        required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Genre</label>
+                    <select name="genre" class="form-select" required>
+                        <option value="" disabled>Select genre</option>
+                        {% for gener in geners %}
+                        <option value="{{ gener.gid }}">
+                            {{ gener.gname }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Anime Image</label>
+                    <input type="file" name="image" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">Add Anime</button>
+            </form>
+        </div>
+
+
+        <h3 class="mb-4" style="color: hotpink;">Anime Collection-Add animes to your watchlist</h3>
+
+        <div class="row">
+            {% for anime in anime_list %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <img src="{{ anime.image.url }}" class="card-img-top" alt="{{ anime.title }}"
+                        style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ anime.title }}</h5>
+                        <p class="card-text" style="height:60px; overflow: hidden;">{{ anime.description }}</p>
+                        <p><strong>Genre:</strong> {{ anime.genre }}</p>
+
+
+
+                        {% if anime.aid %}
+                        <a href="{% url 'edit_anime' anime.aid %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'delete_anime' anime.aid %}" class="btn btn-danger btn-sm">Delete</a>
+                        {% endif %}
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</body>
+
+{% endblock body %}

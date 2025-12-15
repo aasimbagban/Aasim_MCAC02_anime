@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block anime_dashboard %} active {% endblock anime_dashboard %}
+{% block body %}
+
+<body>
+
+    <header class="p-3 bg-dark text-white text-center">
+        <h2>Edit Anime</h2>
+    </header>
+
+    <div class="container my-5">
+
+        <div class="card shadow-lg p-4 mb-5">
+            <h3 class="mb-4">Edit: {{ anime.title }}</h3>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Anime Title</label>
+                    <input type="text" name="title" class="form-control" value="{{ anime.title }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="4"
+                        required>{{ anime.description }}</textarea>
+                </div>
+
+                <select name="genre1" class="form-select" required>
+                    <option value="" disabled>Select genre</option>
+                    {% for gener in geners %}
+                    <option value="{{ gener.gid }}" {% if anime.genre.gid == gener.gid %}selected{% endif %}>
+                        {{ gener.gname }}
+                    </option>
+                    {% endfor %}
+                </select>
+<br>
+<br>
+                <div class="mb-3">
+                    <label class="form-label">Current Image</label>
+                    {% if anime.image %}
+                    <div>
+                        <img src="{{ anime.image.url }}" alt="{{ anime.title }}"
+                            style="max-width:200px; height:auto; display:block; margin-bottom:8px;">
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No image uploaded.</p>
+                    {% endif %}
+                    <label class="form-label">Change Image (optional)</label>
+                    <input type="file" name="image" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">Update Anime</button>
+                <a href="{% url 'anime_dashboard' %}" class="btn btn-secondary px-3 ms-2">Cancel</a>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
+{% endblock body %}
